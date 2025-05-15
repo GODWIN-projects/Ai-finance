@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner"
 import Header from "@/components/header";
 import { ClerkLoaded, ClerkLoading, ClerkProvider } from "@clerk/nextjs";
 
@@ -33,6 +34,7 @@ export default function RootLayout({ children }) {
             <main className="min-h-screen">
               {children}
             </main>
+            <Toaster richColors />
             {/* footer */}
             <footer className="bg-blue-950 py-12">
               <div className="container mx-auto text-center
