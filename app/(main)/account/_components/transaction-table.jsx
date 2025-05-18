@@ -372,7 +372,7 @@ const TransactionTable = ({transactions}) => {
                                                                 <Badge variant="outline" className="gap-1 capitalize 
                                                                     bg-purple-100 text-purple-700 hover:bg-purple-200">
                                                                     <RefreshCcw className='h-3 w-3'/>
-                                                                    {transaction.recurringinterval.toLowerCase()}
+                                                                    {transaction.recurringInterval.toLowerCase()}
                                                                 </Badge>
                                                             </TooltipTrigger>
                                                             <TooltipContent>
@@ -402,7 +402,7 @@ const TransactionTable = ({transactions}) => {
                                                         <DropdownMenuContent>
                                                             <DropdownMenuItem
                                                                 onClick={()=> {
-                                                                    router.push(`/transaction/create?edit=${transaction.id}`)
+                                                                    router.push(`/transaction/create?editId=${transaction.id}`)
                                                                 }}>
                                                                 Edit
                                                             </DropdownMenuItem>
