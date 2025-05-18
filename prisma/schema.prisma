@@ -58,10 +58,10 @@ model Transaction{
   id                  String @id @default(uuid())
   type                TransactionType
   amount              Decimal
-  deescription        String
+  description         String?
   date                DateTime
   category            String
-  receiptUrl          String
+  receiptUrl          String?
   isRecurring         Boolean @default(false)
   recurringinterval   RecurringInterval?
   nextRecurringDate   DateTime?
@@ -101,7 +101,7 @@ enum TransactionStatus {
 model Budget{
   id        String @id @default(uuid())
   amount    Decimal
-  lastAlertSent   DateTime
+  lastAlertSent   DateTime?
   userId          String @unique
   user            User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt       DateTime @default(now())

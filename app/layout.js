@@ -43,9 +43,6 @@ export default function RootLayout({ children }) {
               </div>
             </footer>
                 </ClerkLoaded>
-            <ClerkLoading>
-              <div>loading</div>
-            </ClerkLoading>
           </body>
         </html>
     </ClerkProvider>

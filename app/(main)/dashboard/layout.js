@@ -12,7 +12,7 @@ export default function Layout() {
         </div>
 
         <Suspense 
-            fallback={<BarLoader className="mt-4" width={"100%"} color="#9333ea" />}>
+            fallback={<BarLoader className="mt-4 gradient" width={"100%"} />}>
             <DasboardPage/>
         </Suspense>
     </div>
