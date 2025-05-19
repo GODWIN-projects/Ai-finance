@@ -17,6 +17,7 @@ import { useRouter } from 'next/navigation'
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import ReceiptScanner from './receipt-scanner'
 
 const AddTransactionForm = ({
     accounts,
@@ -56,6 +57,7 @@ const AddTransactionForm = ({
   const type = watch("type")
   const isRecurring = watch("isRecurring")
   const date = watch("date")
+  const category = watch("category")
 
   const router =useRouter()
 
@@ -69,6 +71,23 @@ const AddTransactionForm = ({
   const filteredCategories = categories.filter(
     (category) => category.type === type
   )
+
+
+  const handleScanComplete = (scannedData) => {
+    if (scannedData) {
+      
+      setValue("amount", scannedData.amount.toString());
+      setValue("date", new Date(scannedData.date));
+      if (scannedData.description) {
+        setValue("description", scannedData.description);
+      }
+      if (scannedData.category) {
+        setValue("category", scannedData.category);
+      }
+      toast.success("Receipt scanned successfully");
+    }
+  }
+
 
   useEffect(()=> {
     if (!transactionLoading) {
@@ -90,7 +109,7 @@ const AddTransactionForm = ({
 
       <form className='space-y-6 w-full' onSubmit={handleSubmit(onSubmit)}>
         {/* AI receipt scanner */}
-
+        <ReceiptScanner onScanComplete={handleScanComplete}/>
 
         <div className='space-y-2'>
           <label className='text-sm font-medium'>Type</label>
@@ -164,7 +183,7 @@ const AddTransactionForm = ({
           <label className="text-sm font-medium">Category</label>
           <Select
             onValueChange={(value) => setValue("category", value)}
-            defaultValue={getValues("category")}
+            defaultValue={category}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select category" />
