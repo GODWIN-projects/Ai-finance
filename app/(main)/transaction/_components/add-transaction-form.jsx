@@ -1,6 +1,6 @@
 "use client"
 
-import { createTransaction } from '@/actions/transaaction'
+import { createTransaction, updateTransaction } from '@/actions/transaaction'
 import { transactionSchema } from '@/app/lib/schema'
 import { CreateAccountDrawer } from '@/components/create-account-drawer'
 import { Button } from '@/components/ui/button'
@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { CalendarIcon, Loader2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -22,9 +22,13 @@ import { Calendar } from '@/components/ui/calendar'
 
 const AddTransactionForm = ({
     accounts,
-    categories
+    categories,
+    editMode=false,
+    initialData=null
 }) => {
 
+  const searchParams = useSearchParams()
+  const editId = searchParams.get("editId")
 
   const {
     register,
@@ -36,7 +40,20 @@ const AddTransactionForm = ({
     reset,
   } = useForm({
     resolver: zodResolver(transactionSchema),
-    defaultValues: {
+    defaultValues: 
+    editMode && initialData 
+      ? {
+        type: initialData.type,
+        amount: initialData.amount,
+        description: initialData.description,
+        accountId: initialData.accountId,
+        date: new Date(initialData.date),
+        isRecurring: initialData.isRecurring,
+        ...(initialData.recurringInterval && {
+          recurringInterval: initialData.recurringInterval
+        })
+      }
+      : {
       type: "EXPENSE",
       amount: "",
       description: "",
@@ -52,7 +69,13 @@ const AddTransactionForm = ({
       amount: parseFloat(data.amount),
     }
 
-    transactionFn(formData)
+    if (editMode) {
+      transactionFn(editId,formData)
+    } else {
+
+      transactionFn(formData)
+    }
+
   }
 
   const type = watch("type")
@@ -60,14 +83,14 @@ const AddTransactionForm = ({
   const date = watch("date")
   const category = watch("category")
 
-  const router =useRouter()
+  const router = useRouter()
 
   const {
     loading: transactionLoading,
     fn: transactionFn,
     data: transactionResult,
     error: transactionError
-  } = useFetch(createTransaction)
+  } = useFetch(editMode ? updateTransaction : createTransaction)
 
   const filteredCategories = categories.filter(
     (category) => category.type === type
@@ -93,9 +116,13 @@ const AddTransactionForm = ({
   useEffect(()=> {
     if (!transactionLoading) {
       if (transactionError) {
-          toast.error("Failed to add transaction")
+          toast.error(
+            editMode ? "Failed to updte transaction" :
+            "Failed to add transaction")
       } else if (transactionResult) {
-          toast.success("Transaction added successfully")
+          toast.success(
+            editMode? "Transaction updateed scuccessfully" :
+            "Transaction added successfully")
       }
       reset()
       if (transactionResult?.data?.accountId){
@@ -103,14 +130,15 @@ const AddTransactionForm = ({
         router.push(`/account/${transactionResult.data.accountId}`)
       }
   }
-  }, [transactionLoading,transactionError,transactionResult])
+  }, [transactionLoading,transactionError,transactionResult, editMode])
 
   return (
     <div className='max-w-2xl mx-auto px-4 w-full'>
 
       <form className='space-y-6 w-full' onSubmit={handleSubmit(onSubmit)}>
         {/* AI receipt scanner */}
-        <ReceiptScanner onScanComplete={handleScanComplete}/>
+        { !editMode &&
+          <ReceiptScanner onScanComplete={handleScanComplete}/>}
 
         <div className='space-y-2'>
           <label className='text-sm font-medium'>Type</label>
@@ -300,9 +328,9 @@ const AddTransactionForm = ({
               <>
                 <Loader2
                   className="mr-2 h-4 w-4 animate-spin" />
-                {/* {editMode ? "Updating..." : "Creating..."} */}
+                {editMode ? "Updating..." : "Creating..."}
               </>
-            ) : false ? (
+            ) : editId ? (
               "Update Transaction"
             ) : (
               "Create Transaction"

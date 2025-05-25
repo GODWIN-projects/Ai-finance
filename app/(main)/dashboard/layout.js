@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import DasboardPage from './page'
+import DashboardPage from './page'
 import { BarLoader } from "react-spinners"
 
 export default function Layout() {
@@ -13,7 +13,7 @@ export default function Layout() {
 
         <Suspense 
             fallback={<BarLoader className="mt-4 gradient" width={"100%"} />}>
-            <DasboardPage/>
+            <DashboardPage/>
         </Suspense>
     </div>
   )
