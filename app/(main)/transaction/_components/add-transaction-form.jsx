@@ -12,12 +12,13 @@ import useFetch from '@/hooks/use-fetch'
 import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
-import { Calendar, CalendarIcon, Loader2 } from 'lucide-react'
+import { CalendarIcon, Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import ReceiptScanner from './receipt-scanner'
+import { Calendar } from '@/components/ui/calendar'
 
 const AddTransactionForm = ({
     accounts,
@@ -219,12 +220,14 @@ const AddTransactionForm = ({
             <PopoverContent className="w-auto p-0" align="start">
               <Calendar
                 mode="single"
-                selected={date}
-                onSelect={(date) => setValue("date", date)}
-                disabled={(date) =>
-                  date > new Date() || date < new Date("1900-01-01")
-                }
-                initialFocus
+                selected={date ?? new Date()}
+                onSelect={(selectedDate) => {
+                  setValue("date", selectedDate, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  });
+                }}
+               
               />
             </PopoverContent>
           </Popover>

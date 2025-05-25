@@ -162,7 +162,7 @@ function calculateRecurringData(startDate,interval) {
 
     switch (interval) {
         case "DAILY" :
-            date.setDate(date.getDate + 1)
+            date.setDate(date.getDate() + 1)
             break
         case "WEEKLY":
             date.setDate(date.getDate() + 7)
