@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
+  metadataBase: new URL("https://ai-finance-pied.vercel.app"),
   title: "Smart Finance",
   description: "A smart AI-powered finance dashboard.",
   openGraph: {
