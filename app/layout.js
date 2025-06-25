@@ -14,6 +14,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+console.log("DATABASE_URL:", process.env.DATABASE_URL);
+
+
 export const metadata = {
   metadataBase: new URL("https://ai-finance-pied.vercel.app"),
   title: "Smart Finance",
