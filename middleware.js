@@ -14,7 +14,8 @@ const aj = arcjet({
       mode:"LIVE",
       allow:[
         "CATEGORY:SEARCH_ENGINE",
-        "GO_HTTP"
+        "GO_HTTP",
+        "UA:LinkedInBot"
       ]
     })
   ]
